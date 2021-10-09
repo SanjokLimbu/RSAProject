@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RSAProject", "RSAProject\RSAProject.vcxproj", "{02F6CBED-9597-4FD3-955B-88B888D2BC48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Debug|x64.ActiveCfg = Debug|x64
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Debug|x64.Build.0 = Debug|x64
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Debug|x86.ActiveCfg = Debug|Win32
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Debug|x86.Build.0 = Debug|Win32
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Release|x64.ActiveCfg = Release|x64
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Release|x64.Build.0 = Release|x64
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Release|x86.ActiveCfg = Release|Win32
+		{02F6CBED-9597-4FD3-955B-88B888D2BC48}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72113C34-0493-4DE9-85CC-3A86FF3F2C0E}
+	EndGlobalSection
+EndGlobal
