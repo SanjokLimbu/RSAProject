@@ -17,6 +17,7 @@ private:
 	unsigned int phi_n{};
 	unsigned int PrivateKey{};
 	std::vector<cpp_int> c;
+	std::vector<int> m;
 
 public:
 	unsigned int ConvertASCII(string message);
@@ -24,6 +25,8 @@ public:
 	unsigned int CalculateKey();
 	void EncryptMessage(string message);
 	void DecryptMessage();
+	std::vector<cpp_int> RSAHash(string message);
+	void VerifyHash();
 	cpp_int MyPow(cpp_int x, int p);
 };
 

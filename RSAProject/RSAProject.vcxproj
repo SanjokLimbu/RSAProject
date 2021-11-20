@@ -141,10 +141,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EllipticCurve.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RSA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EllipticCurve.h" />
     <ClInclude Include="RSA.h" />
   </ItemGroup>
   <ItemGroup>

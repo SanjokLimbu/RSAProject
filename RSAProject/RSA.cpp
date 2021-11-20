@@ -32,7 +32,6 @@ unsigned int KeyGeneration::CalculateKey() {
 }
 
 void KeyGeneration::EncryptMessage(string message) {
-	std::vector<int> m;
 	cpp_int encoded = 0;
 	for (char mes : message) {
 		m.push_back((int)mes);
@@ -59,6 +58,20 @@ void KeyGeneration::DecryptMessage() {
 	std::cout << result << std::endl;
 }
 
+std::vector<cpp_int> KeyGeneration::RSAHash(string message) {
+	cpp_int hash = 0;
+	for (cpp_int rsaHash : m) {
+		hash = MyPow(rsaHash, PrivateKey) % n;
+		c.push_back(hash);
+	}
+
+	return c;
+}
+
+void KeyGeneration::VerifyHash() {
+
+}
+
 cpp_int KeyGeneration::MyPow(cpp_int x, int p) {
 	cpp_int result = x;
 	if (p == 0) return 1;
@@ -67,6 +80,5 @@ cpp_int KeyGeneration::MyPow(cpp_int x, int p) {
 	for (int i = 1; i < p; i++) {
 		result *= x;
 	}
-	std::cout << result << std::endl;
 	return result;
 }
