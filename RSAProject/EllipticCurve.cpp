@@ -142,7 +142,7 @@ void EllipticCurve::GeneratePublicKey() {
 			}
 		}
 
-		std::cout << x1Coordinate << " " << y1Coordinate << std::endl;
+		std::cout << std::showbase << std::hex << x1Coordinate << " " << y1Coordinate << std::endl;
 	}
 }
 

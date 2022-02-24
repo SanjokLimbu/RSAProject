@@ -25,7 +25,6 @@ public:
 		int x{}, y{}, GCD{};
 	};
 	EEA CalculateGCD(int a, int b);
-	int CalculateCoefficient(int a, int b, int &x, int &y);
 };
 
 #endif // !ELLIPTICCURVE_H
