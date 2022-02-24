@@ -1,8 +1,7 @@
 # RSAProject
-RSA Encryption
 
 Test project for Encryption method.
 
-single key - AES algorith
+single key - AES algorithm
 
 public-private key - RSA and ECC
