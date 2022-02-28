@@ -67,10 +67,15 @@ void AES::MessageBlock(uint8_t Message[16]) {
 }
 
 void AES::AESEncryption(uint8_t Message[16]) {
+    uint8_t TotalLength{};
+    for (int i = 0; i < 16; i++) {
+        Chunks[i] = Message[i];
+    }
+    RoundKeyCounter = 1;
     while (RoundKeyCounter < 10) {
         //Byte Substitution
         for (int i = 0; i < 16; i++) {
-            Chunks[i] = SBoxCalculator(Message[i]);
+            Chunks[i] = SBoxCalculator(Chunks[i]);
         }
 
         //ShiftRow
@@ -121,13 +126,9 @@ void AES::AESEncryption(uint8_t Message[16]) {
         temp[14] = Chunks[12] ^ Chunks[13] ^ Multiple(2, Chunks[14]) ^ Multiple(3, Chunks[15]);
         temp[15] = Multiple(3, Chunks[12]) ^ Chunks[13] ^ Chunks[14] ^ Multiple(2, Chunks[15]);
 
-        for (int i = 0; i < 16; i++) {
-            Chunks[i] = temp[i];
-        }
-
         //Keyaddition layer
         for (int j = 0; j < 16; j++) {
-            Chunks[j] ^= ExpandedRoundKey[RoundKeyCounter][j];
+            Chunks[j] = temp[j] ^ ExpandedRoundKey[RoundKeyCounter][j];
         }
 
         RoundKeyCounter++;
@@ -138,7 +139,7 @@ void AES::AESEncryption(uint8_t Message[16]) {
     // 
     //Byte Substitution
     for (int i = 0; i < 16; i++) {
-        Chunks[i] = SBoxCalculator(Message[i]);
+        Chunks[i] = SBoxCalculator(Chunks[i]);
     }
 
     //ShiftRow
@@ -171,16 +172,122 @@ void AES::AESEncryption(uint8_t Message[16]) {
     //AddRound
     for (int j = 0; j < 16; j++) {
         Chunks[j] ^= ExpandedRoundKey[10][j];
+        std::cout << std::nouppercase << std::showbase << std::hex << (int)Chunks[j] << " ";
     }
+
+    AESDecryption(Chunks);
+}
+
+void AES::AESDecryption(uint8_t Message[16]) {
     for (int i = 0; i < 16; i++) {
-        std::cout << std::nouppercase << std::showbase << std::hex << (int)Chunks[i] << " ";
+        DecryptionChunks[i] = Message[i];
+    }
+
+    //Key addition layer
+    for (int j = 0; j < 16; j++) {
+        DecryptionChunks[j] ^= ExpandedRoundKey[10][j];
+    }
+
+    //ShiftRow
+    uint8_t temp[16]{};
+
+    temp[0] = DecryptionChunks[0];
+    temp[1] = DecryptionChunks[13];
+    temp[2] = DecryptionChunks[10];
+    temp[3] = DecryptionChunks[7];
+
+    temp[4] = DecryptionChunks[4];
+    temp[5] = DecryptionChunks[1];
+    temp[6] = DecryptionChunks[14];
+    temp[7] = DecryptionChunks[11];
+
+    temp[8] = DecryptionChunks[8];
+    temp[9] = DecryptionChunks[5];
+    temp[10] = DecryptionChunks[2];
+    temp[11] = DecryptionChunks[15];
+
+    temp[12] = DecryptionChunks[12];
+    temp[13] = DecryptionChunks[9];
+    temp[14] = DecryptionChunks[6];
+    temp[15] = DecryptionChunks[3];
+
+    //Byte Substitution
+    for (int i = 0; i < 16; i++) {
+        DecryptionChunks[i] = InverseSBox(temp[i]);
+    }
+    RoundKeyCounter = 9;
+    do {
+        //Roundkey
+        for (int j = 0; j < 16; j++) {
+            DecryptionChunks[j] ^= ExpandedRoundKey[RoundKeyCounter][j];
+        }
+
+        uint8_t temp[16]{};
+
+        //mix Column
+        temp[0] = Multiplier(14, DecryptionChunks[0]) ^ Multiplier(11, DecryptionChunks[1]) ^ Multiplier(13, DecryptionChunks[2]) ^ Multiplier(9, DecryptionChunks[3]);
+        temp[1] = Multiplier(9, DecryptionChunks[0]) ^ Multiplier(14, DecryptionChunks[1]) ^ Multiplier(11, DecryptionChunks[2]) ^ Multiplier(13, DecryptionChunks[3]);
+        temp[2] = Multiplier(13, DecryptionChunks[0]) ^ Multiplier(9, DecryptionChunks[1]) ^ Multiplier(14, DecryptionChunks[2]) ^ Multiplier(11, DecryptionChunks[3]);
+        temp[3] = Multiplier(11, DecryptionChunks[0]) ^ Multiplier(13, DecryptionChunks[1]) ^ Multiplier(9, DecryptionChunks[2]) ^ Multiplier(14, DecryptionChunks[3]);
+
+        temp[4] = Multiplier(14, DecryptionChunks[4]) ^ Multiplier(11, DecryptionChunks[5]) ^ Multiplier(13, DecryptionChunks[6]) ^ Multiplier(9, DecryptionChunks[7]);
+        temp[5] = Multiplier(9, DecryptionChunks[4]) ^ Multiplier(14, DecryptionChunks[5]) ^ Multiplier(11, DecryptionChunks[6]) ^ Multiplier(13, DecryptionChunks[7]);
+        temp[6] = Multiplier(13, DecryptionChunks[4]) ^ Multiplier(9, DecryptionChunks[5]) ^ Multiplier(14, DecryptionChunks[6]) ^ Multiplier(11, DecryptionChunks[7]);
+        temp[7] = Multiplier(11, DecryptionChunks[4]) ^ Multiplier(13, DecryptionChunks[5]) ^ Multiplier(9, DecryptionChunks[6]) ^ Multiplier(14, DecryptionChunks[7]);
+
+        temp[8] = Multiplier(14, DecryptionChunks[8]) ^ Multiplier(11, DecryptionChunks[9]) ^ Multiplier(13, DecryptionChunks[10]) ^ Multiplier(9, DecryptionChunks[11]);
+        temp[9] = Multiplier(9, DecryptionChunks[8]) ^ Multiplier(14, DecryptionChunks[9]) ^ Multiplier(11, DecryptionChunks[10]) ^ Multiplier(13, DecryptionChunks[11]);
+        temp[10] = Multiplier(13, DecryptionChunks[8]) ^ Multiplier(9, DecryptionChunks[9]) ^ Multiplier(14, DecryptionChunks[10]) ^ Multiplier(11, DecryptionChunks[11]);
+        temp[11] = Multiplier(11, DecryptionChunks[8]) ^ Multiplier(13, DecryptionChunks[9]) ^ Multiplier(9, DecryptionChunks[10]) ^ Multiplier(14, DecryptionChunks[11]);
+
+        temp[12] = Multiplier(14, DecryptionChunks[12]) ^ Multiplier(11, DecryptionChunks[13]) ^ Multiplier(13, DecryptionChunks[14]) ^ Multiplier(9, DecryptionChunks[15]);
+        temp[13] = Multiplier(9, DecryptionChunks[12]) ^ Multiplier(14, DecryptionChunks[13]) ^ Multiplier(11, DecryptionChunks[14]) ^ Multiplier(13, DecryptionChunks[15]);
+        temp[14] = Multiplier(13, DecryptionChunks[12]) ^ Multiplier(9, DecryptionChunks[13]) ^ Multiplier(14, DecryptionChunks[14]) ^ Multiplier(11, DecryptionChunks[15]);
+        temp[15] = Multiplier(11, DecryptionChunks[12]) ^ Multiplier(13, DecryptionChunks[13]) ^ Multiplier(9, DecryptionChunks[14]) ^ Multiplier(14, DecryptionChunks[15]);
+
+        for (int i = 0; i < 16; i++) {
+            DecryptionChunks[i] = temp[i];
+        }
+
+        //Shiftrow
+        temp[0] = DecryptionChunks[0];
+        temp[1] = DecryptionChunks[13];
+        temp[2] = DecryptionChunks[10];
+        temp[3] = DecryptionChunks[7];
+
+        temp[4] = DecryptionChunks[4];
+        temp[5] = DecryptionChunks[1];
+        temp[6] = DecryptionChunks[14];
+        temp[7] = DecryptionChunks[11];
+
+        temp[8] = DecryptionChunks[8];
+        temp[9] = DecryptionChunks[5];
+        temp[10] = DecryptionChunks[2];
+        temp[11] = DecryptionChunks[15];
+
+        temp[12] = DecryptionChunks[12];
+        temp[13] = DecryptionChunks[9];
+        temp[14] = DecryptionChunks[6];
+        temp[15] = DecryptionChunks[3];
+
+        //Byte Substitution
+        for (int i = 0; i < 16; i++) {
+            DecryptionChunks[i] = InverseSBox(temp[i]);
+        }
+
+        RoundKeyCounter--;
+
+    } while (RoundKeyCounter != 0);
+
+    //Key whitening
+    for (int i = 0; i < 16; i++) {
+        DecryptionChunks[i] ^= ExpandedRoundKey[RoundKeyCounter][i];
+        std::cout << std::nouppercase << DecryptionChunks[i] << " ";
     }
 }
 
 uint8_t AES::SBoxCalculator(uint8_t value) {
     uint8_t val = MulInverse(value);
-    uint8_t OutS{};
-    uint8_t temp[8]{};
     std::bitset<8> inv{ val };
     std::bitset<8> bites[8]{};
     std::bitset<8> bits{};
@@ -252,10 +359,55 @@ uint8_t AES::MulInverse(uint8_t value) {
     return Inverse;
 }
 
-uint8_t AES::Multiple(uint8_t multiple, uint8_t value) {
+uint8_t AES::Multiplier(uint8_t multiple, uint8_t value) {
     if (value == 0) {
         return 0;
     }
+
+    uint8_t multiplier = multiple, val = value, mulvalue{}, counter{};
+
+    switch (multiplier)
+    {
+    case 9:
+        while (counter < 3) {
+            val = Multiple(2, val);
+            counter++;
+        }
+        mulvalue = val ^ value;
+        break;
+
+    case 11:
+        val = Multiple(2, val);
+        val = Multiple(2, val);
+        val ^= value;
+        val = Multiple(2, val);
+        mulvalue = val ^ value;
+        break;
+    case 13:
+        val = Multiple(2, val);
+        val ^= value;
+        val = Multiple(2, val);
+        val = Multiple(2, val);
+        mulvalue = val ^ value;
+        break;
+    case 14:
+        val = Multiple(2, val);
+        val ^= value;
+        val = Multiple(2, val);
+        val ^= value;
+        val = Multiple(2, val);
+        mulvalue = val;
+        break;
+
+    default:
+        mulvalue = Multiple(multiplier, val);
+        break;
+    }
+
+    return mulvalue;
+}
+
+uint8_t AES::Multiple(uint8_t multiple, uint8_t value) {
     std::bitset<8> val = value;
     std::bitset<8> multiplier = multiple;
     std::bitset<15> Temp[8]{};
@@ -278,7 +430,7 @@ uint8_t AES::Multiple(uint8_t multiple, uint8_t value) {
     Temp[0] ^= Temp[1] ^ Temp[2] ^ Temp[3] ^ Temp[4] ^ Temp[5] ^ Temp[6] ^ Temp[7];
 
     uint16_t mulvalue = Temp[0].to_ulong();
-    if (mulvalue > 255) {
+    while (mulvalue > 255) {
         mulvalue ^= PolyMod;
     }
 
@@ -358,3 +510,21 @@ int AES::Power(int x, int y, int mod) {
     return (y % 2 == 0) ? p : (x * p) % mod;
 }
 
+uint8_t AES::InverseSBox(uint8_t value) {
+    std::bitset<8> val = value;
+    std::bitset<8> mul = 0x05;
+    std::bitset<8> temp[8]{};
+    std::bitset<8> bits{};
+
+    for (int i = 0; i < 8; i++) {
+        std::bitset<8> matrix = Dverse[i];
+        temp[i] = val & matrix;
+    }
+    for (int i = 0; i < 8; i++) {
+        bits[i] = temp[i][0] ^ temp[i][1] ^ temp[i][2] ^ temp[i][3] ^ temp[i][4] ^ temp[i][5] ^ temp[i][6] ^ temp[i][7] ^ mul[i];
+    }
+
+    uint8_t InverseSBoxValue = MulInverse(bits.to_ulong());
+
+    return InverseSBoxValue;
+}

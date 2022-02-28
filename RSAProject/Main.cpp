@@ -39,6 +39,8 @@ int main() {
 	
 
 	AES aes;
+	//aes.InverseSBox(0xc7);
+	//aes.Multiplier(14, 0x77);
 	uint8_t Key[16] = {
 		1, 2, 3, 4,
 		5, 6, 7, 8,
