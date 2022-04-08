@@ -53,7 +53,7 @@ void AES::KeyExpansion(uint8_t Key[16]) {
     }
 }
 
-void AES::MessageBlock(uint8_t Message[16]) {
+uint8_t* AES::MessageBlock(uint8_t Message[16]) {
     for (int i = 0; i < 16; i++) {
         Chunks[i] = Message[i];
     }
@@ -63,10 +63,10 @@ void AES::MessageBlock(uint8_t Message[16]) {
         Chunks[i] ^= ExpandedRoundKey[0][i];
     }
 
-    AESEncryption(Chunks);
+    return AESEncryption(Chunks);
 }
 
-void AES::AESEncryption(uint8_t Message[16]) {
+uint8_t* AES::AESEncryption(uint8_t Message[16]) {
     uint8_t TotalLength{};
     for (int i = 0; i < 16; i++) {
         Chunks[i] = Message[i];
@@ -175,7 +175,7 @@ void AES::AESEncryption(uint8_t Message[16]) {
         std::cout << std::nouppercase << std::showbase << std::hex << (int)Chunks[j] << " ";
     }
 
-    AESDecryption(Chunks);
+    return Chunks;
 }
 
 void AES::AESDecryption(uint8_t Message[16]) {

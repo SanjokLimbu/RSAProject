@@ -1,5 +1,24 @@
 #include "EllipticCurve.h"
 #include <bitset>
+#include <cstdlib>
+#include <ctime>
+
+void EllipticCurve::PrivateKeyGenerator(uint16_t value) {
+	Key[0] = value / 1000;
+	Key[1] = (value / 100) - (Key[0] * 10);
+	Key[2] = (value / 10) - (Key[0] * 100) - (Key[1] * 10);
+	Key[3] = value - (Key[0] * 1000) - (Key[1] * 100) - (Key[2] * 10);
+	//RNG
+	srand(time(0));
+	for (int i = 4; i < 78; i++) {
+		Key[i] = rand() % 10;
+	}
+	for (int i = 0; i < sizeof(Key); i++) {
+		ECCKey += Key[i];
+		//std::cout << ECCKey;
+	}
+	std::cout << ECCKey;
+}
 
 void EllipticCurve::Generator(int a, int b) {
 	GeneratorPoint[0] = a;

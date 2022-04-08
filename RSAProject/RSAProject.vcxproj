@@ -146,11 +146,13 @@
     <ClCompile Include="EllipticCurve.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RSA.cpp" />
+    <ClCompile Include="SHA3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AES.h" />
     <ClInclude Include="EllipticCurve.h" />
     <ClInclude Include="RSA.h" />
+    <ClInclude Include="SHA3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
