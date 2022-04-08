@@ -13,7 +13,7 @@
 void SHA3::Preprocessing(string message) {
 	string input = message;
 	size_t len = input.length();
-	size_t originallen = len;
+	size_t lastblocklength = len % 136;
 	do {
 		input += '\0';
 		len++;
@@ -37,8 +37,8 @@ void SHA3::Preprocessing(string message) {
 			Absorb(chunks);
 		}
 		else {
-			chunks.flip(originallen * 8 + 1);
-			chunks.flip(originallen * 8 + 2);
+			chunks.flip(lastblocklength * 8 + 1);
+			chunks.flip(lastblocklength * 8 + 2);
 			chunks.flip(1087);
 			Absorb(chunks);
 			Squeeze();
